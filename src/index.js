@@ -3,7 +3,7 @@ const path = require('path');
 const http = require('http');
 const { Server } = require('socket.io');
 const Filter = require('bad-words');
-const { generayeMessage } = require('./utils/messages');
+const { generateMessage } = require('./utils/messages');
 
 const app = express();
 const server = http.createServer(app);
@@ -18,8 +18,8 @@ app.use(express.static(puplicDirectoryPath));
 io.on('connection', (socket) => {
 	console.log('new Websocket connection ');
 
-	socket.emit('message', generayeMessage('Welcome!'));
-	socket.broadcast.emit('message', generayeMessage('A new user has joined'));
+	socket.emit('message', generateMessage('Welcome!'));
+	socket.broadcast.emit('message', generateMessage('A new user has joined'));
 
 	socket.on('sendMessage', (message, callback) => {
 		const filter = new Filter();
@@ -28,7 +28,7 @@ io.on('connection', (socket) => {
 			return callback('Profanity is not allowed!');
 		}
 
-		io.emit('message', generayeMessage(message));
+		io.emit('message', generateMessage(message));
 		callback();
 	});
 
@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('disconnect', () => {
-		io.emit('message', generayeMessage('A user has left!'));
+		io.emit('message', generateMessage('A user has left!'));
 	});
 });
 
